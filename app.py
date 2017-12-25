@@ -14,8 +14,12 @@ def generate_question(grade):
         A,S = sorted([A,S])
         B = S - A
         
-        # A + B is the question, S is the answer.
-        question = '{A} + {B}'.format(**locals())
+        ops = ('+','-')
+        op = random.choice(ops)
+        # get question and answer.
+        if op == '-':
+            A,S = S,A
+        question = '{A} {op} {B}'.format(**locals())
         answer = str(S)
     else:
         err = 'I do not understand this grade: {}'.format(grade)
@@ -26,11 +30,8 @@ if __name__ == '__main__':
 
     # get a question answer pair
     grade = 'reception'
-    question, answer, err = generate_question(grade)
-    if err:
-        raise ValueError(err)
     app = wx.App(False)
     frame = Frame.AMFrame(None,'AnswerMe')
-    panel = Panel.AMPanel(frame, question, answer)
+    panel = Panel.AMPanel(frame, generate_question, grade)
     frame.Show()
     app.MainLoop()

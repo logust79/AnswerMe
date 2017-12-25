@@ -1,6 +1,5 @@
 import os
 import wx
-import random
 import time
 
 class AMFrame(wx.Frame):
@@ -24,9 +23,7 @@ class AMFrame(wx.Frame):
 
     def OnExit(self,e):
         #self.Close(True)  # Close the frame.
-        self.Hide()
-        time.sleep(1)
-        self.Show()
+        pass
     def Reposition(self,e):
         self.Maximize(True)
 
