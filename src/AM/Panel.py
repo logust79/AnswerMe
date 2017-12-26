@@ -14,9 +14,8 @@ class AMPanel(wx.Panel):
             raise ValueError(err)
         self.__trueAnswer = answer
         self.question = wx.StaticText(self, label="Your question : {}".format(question), pos=(20, 30))
-
-        # A log
-        self.logger = wx.TextCtrl(self, pos=(300,20), size=(200,300), style=wx.TE_MULTILINE | wx.TE_READONLY)
+        font = wx.Font(18, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
+        self.question.SetFont(font)
 
         # A submit button
         self.button =wx.Button(self, label="Submit", pos=(200, 90))
@@ -24,14 +23,18 @@ class AMPanel(wx.Panel):
 
         # the edit control - one line version.
         self.lblanswer = wx.StaticText(self, label="Your answer :", pos=(20,60))
-        self.editanswer = wx.TextCtrl(self, value="", pos=(105, 60), size=(140,-1))
+        self.lblanswer.SetFont(font)
+        self.editanswer = wx.TextCtrl(self, value="", pos=(20, 90), size=(140,-1))
+        self.editanswer.SetFont(font)
+        self.editanswer.SetFocus()
         self.Bind(wx.EVT_TEXT, self.EvtText, self.editanswer)
-
+        # A log
+        self.logger = wx.TextCtrl(self, pos=(300,20), size=(200,300), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
     def OnClick(self,event):
         #self.logger.AppendText(" Click on object with Id %d\n" %event.GetId())
         if str(self.__answer) == self.__trueAnswer:
-            self.logger.AppendText(" Correct!!")
+            self.logger.AppendText("AM: Correct!!\n")
             time.sleep(0.5)
             self.parent.Hide()
             time.sleep(15*60)
@@ -39,12 +42,12 @@ class AMPanel(wx.Panel):
             self.editanswer.Clear()
             # change question
             question, answer, err = self.question_generator(self.grade)
-            self.question.SetLabel(question)
+            self.question.SetLabel('Your question : {}'.format(question))
             self.__trueAnswer = answer
             # show
             self.parent.Show(True)
         else:
-            self.logger.AppendText(" Wrong!!, do it again!")
+            self.logger.AppendText("AM: Wrong!!, do it again!\n")
     def EvtText(self, event):
         self.logger.AppendText('AM: %s\n' % event.GetString())
         self.__answer = event.GetString()
