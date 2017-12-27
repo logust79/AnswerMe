@@ -4,7 +4,7 @@ import time
 
 class AMFrame(wx.Frame):
     def __init__(self, parent, title):
-        style = wx.SYSTEM_MENU|wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN|wx.STAY_ON_TOP
+        style = wx.STAY_ON_TOP
         wx.Frame.__init__(self, parent, title=title, style=style)
         self.CreateStatusBar() # A StatusBar in the bottom of the window
 

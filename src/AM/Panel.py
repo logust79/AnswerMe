@@ -38,9 +38,10 @@ class AMPanel(wx.Panel):
             self.count += 1
             time.sleep(0.5)
             self.parent.Hide()
-            time.sleep(15*60)
+            time.sleep(10*60)
             # clear answer
             self.editanswer.Clear()
+            self.editanswer.SetFocus()        
             # change question
             question, answer, err = self.question_generator(self.grade + self.count//5)
             self.question.SetLabel('Your question : {}'.format(question))
@@ -48,6 +49,8 @@ class AMPanel(wx.Panel):
             # show
             self.parent.Show(True)
         else:
+            self.editanswer.Clear()
+            self.editanswer.SetFocus()
             self.logger.AppendText("AM: Wrong!!, do it again!\n")
     def EvtText(self, event):
         self.logger.AppendText('AM: %s\n' % event.GetString())
