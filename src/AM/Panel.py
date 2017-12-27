@@ -5,7 +5,7 @@ class AMPanel(wx.Panel):
         wx.Panel.__init__(self, parent)
         self.__answer = None
         self.parent = parent
-        
+        self.count = 0
         # generate question and answer
         self.question_generator = question_generator
         self.grade = grade
@@ -35,13 +35,14 @@ class AMPanel(wx.Panel):
         #self.logger.AppendText(" Click on object with Id %d\n" %event.GetId())
         if str(self.__answer) == self.__trueAnswer:
             self.logger.AppendText("AM: Correct!!\n")
+            self.count += 1
             time.sleep(0.5)
             self.parent.Hide()
             time.sleep(15*60)
             # clear answer
             self.editanswer.Clear()
             # change question
-            question, answer, err = self.question_generator(self.grade)
+            question, answer, err = self.question_generator(self.grade + self.count//5)
             self.question.SetLabel('Your question : {}'.format(question))
             self.__trueAnswer = answer
             # show

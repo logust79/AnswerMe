@@ -6,7 +6,7 @@ import random
 
 def generate_question(grade):
     err = None
-    if grade == 'reception':
+    if grade == 0:
         A = random.randint(0,10)
         S = random.randint(0,10)
         
@@ -21,6 +21,12 @@ def generate_question(grade):
             A,S = S,A
         question = '{A} {op} {B}'.format(**locals())
         answer = str(S)
+    elif grade == 1:
+        A = random.randint(0,10)
+        B = random.randint(0,10)
+        S = A * B
+        question = '{A} * {B}'.format(**locals())
+        answer = str(S)
     else:
         err = 'I do not understand this grade: {}'.format(grade)
         return(None, None, err)
@@ -29,7 +35,7 @@ def generate_question(grade):
 if __name__ == '__main__':
 
     # get a question answer pair
-    grade = 'reception'
+    grade = 0
     app = wx.App(False)
     frame = Frame.AMFrame(None,'AnswerMe')
     panel = Panel.AMPanel(frame, generate_question, grade)
