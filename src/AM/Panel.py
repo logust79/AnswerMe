@@ -1,11 +1,13 @@
 import wx
 import time
 class AMPanel(wx.Panel):
-    def __init__(self, parent, question_generator, grade):
+    def __init__(self, parent, question_generator, grade, time_down_func):
         wx.Panel.__init__(self, parent)
         self.__answer = None
         self.parent = parent
         self.count = 0
+        self.wrong_count = 0
+        self.time_down_func = time_down_func
         # generate question and answer
         self.question_generator = question_generator
         self.grade = grade
@@ -34,11 +36,14 @@ class AMPanel(wx.Panel):
     def OnClick(self,event):
         #self.logger.AppendText(" Click on object with Id %d\n" %event.GetId())
         if str(self.__answer) == self.__trueAnswer:
+            # clear wrong count
+            self.wrong_count = 0
             self.logger.AppendText("AM: Correct!!\n")
             self.count += 1
             time.sleep(0.5)
             self.parent.Hide()
-            time.sleep(10*60)
+            time_to_sleep = self.time_down_func(self.count) * 60
+            time.sleep(time_to_sleep)
             # clear answer
             self.editanswer.Clear()
             self.editanswer.SetFocus()        
@@ -49,9 +54,28 @@ class AMPanel(wx.Panel):
             # show
             self.parent.Show(True)
         else:
+            self.wrong_count += 1
+            if not self.wrong_count % 9:
+                # anti spam
+                self.logger.AppendText(
+                    "AM: You are spamming too much! Wait for 2 mins.\n"
+                    )
+                self.editanswer.Hide()
+                time.sleep(2*60)
+                self.editanswer.Show(True)
+            if not self.wrong_count % 3:
+                # get a new question
+                self.logger.AppendText(
+                    "AM: Wrong again!! Time to crack a new question.\n"
+                    )
+                question, answer, err = self.question_generator(self.grade + self.count//3)
+                self.question.SetLabel('Your question : {}'.format(question))
+                self.__trueAnswer = answer
+            else:
+                self.logger.AppendText("AM: Wrong!!, do it again!\n")
             self.editanswer.Clear()
             self.editanswer.SetFocus()
-            self.logger.AppendText("AM: Wrong!!, do it again!\n")
+            
     def EvtText(self, event):
         self.logger.AppendText('AM: %s\n' % event.GetString())
         self.__answer = event.GetString()

@@ -6,22 +6,20 @@ import random
 
 def generate_question(grade):
     err = None
-    if grade == 0:
+    if grade in (0,1):
+        # + / -
         A = random.randint(0,10)
-        S = random.randint(0,10)
+        B = random.randint(0,10)
         
-        # make sure S >= A
-        A,S = sorted([A,S])
-        B = S - A
+        S = A + B
         
-        ops = ('+','-')
-        op = random.choice(ops)
-        # get question and answer.
-        if op == '-':
-            A,S = S,A
-        question = '{A} {op} {B}'.format(**locals())
-        answer = str(S)
-    elif grade == 1:
+        if grade == 0:
+            question = '{A} + {B}'.format(**locals())
+            answer = str(S)
+        else:
+            question = '{S} - {A}'.format(**locals())
+            answer = str(B)
+    elif grade == 2:
         A = random.randint(0,10)
         B = random.randint(0,10)
         S = A * B
@@ -32,12 +30,16 @@ def generate_question(grade):
         return(None, None, err)
     return(question, answer, err)
 
+def time_down_func(x):
+    # a function to timing the challenges
+    return 30 / x
+    
 if __name__ == '__main__':
 
     # get a question answer pair
     grade = 0
     app = wx.App(False)
     frame = Frame.AMFrame(None,'AnswerMe')
-    panel = Panel.AMPanel(frame, generate_question, grade)
+    panel = Panel.AMPanel(frame, generate_question, grade, time_down_func)
     frame.Show()
     app.MainLoop()
